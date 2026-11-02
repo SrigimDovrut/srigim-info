@@ -5,29 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>שריגים · מדריך לתושבים</title>
 <meta name="description" content="נהלים, הנחיות ומידע שימושי לתושבות ולתושבי שריגים, במקום אחד.">
-<meta name="theme-color" content="#3f5d3a">
+<meta name="theme-color" content="#68367f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233f5d3a'/%3E%3Ccircle cx='24' cy='36' r='7' fill='%23c9a6d9'/%3E%3Ccircle cx='36' cy='30' r='7' fill='%23b38cc8'/%3E%3Ccircle cx='32' cy='43' r='7' fill='%239e74b8'/%3E%3Cpath d='M34 22c2-6 8-9 14-8-2 6-8 9-14 8z' fill='%23a9c79a'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta property="og:image" content="logo.jpg">
 <style>
 :root{
-  --bg:#f7f4ee; --surface:#ffffff; --surface-2:#f0ece3; --ink:#24302a; --muted:#5f6b63;
-  --line:#e2dccf; --brand:#3f5d3a; --brand-ink:#ffffff; --brand-soft:#e5eedf;
-  --grape:#7a4f93; --grape-soft:#f1e9f5; --warn:#8a5a12; --warn-soft:#fbf1dc;
-  --radius:16px; --shadow:0 1px 2px rgba(36,48,42,.06),0 4px 14px rgba(36,48,42,.06);
+  --bg:#f6f1e8; --surface:#fffdf9; --surface-2:#f4edf5; --ink:#2f2534; --muted:#6c6272;
+  --line:#e9e0e6; --brand:#68367f; --brand-ink:#ffffff; --brand-soft:#f1e7f5;
+  --grape:#953d93; --grape-soft:#f7e9f5; --leaf:#4f8a2b; --leaf-soft:#e9f3df;
+  --warn:#7a4a12; --warn-soft:#f8eedb;
+  --radius:18px; --shadow:0 1px 2px rgba(80,40,90,.05),0 6px 18px rgba(80,40,90,.07);
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#151a17; --surface:#1d2420; --surface-2:#252e29; --ink:#e7ece8; --muted:#a6b1aa;
-    --line:#323c36; --brand:#8fb784; --brand-ink:#132012; --brand-soft:#253323;
-    --grape:#c9a6dc; --grape-soft:#2e2535; --warn:#e6c07a; --warn-soft:#3a3020;
+    --bg:#1a1520; --surface:#231c29; --surface-2:#2c2433; --ink:#f0eaf3; --muted:#b6abbd;
+    --line:#3a3042; --brand:#cfa3e6; --brand-ink:#25142f; --brand-soft:#342640;
+    --grape:#e4a9df; --grape-soft:#36243a; --leaf:#a3d47a; --leaf-soft:#26331d;
+    --warn:#e8c27e; --warn-soft:#3a2f20;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
   }
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:84px}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Heebo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg) radial-gradient(1200px 420px at 50% -120px, var(--brand-soft), transparent 70%) no-repeat;color:var(--ink);font-family:"Heebo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
 a{color:var(--brand);text-underline-offset:3px}
 .wrap{max-width:860px;margin:0 auto;padding:0 16px}
 
@@ -35,8 +39,8 @@ a{color:var(--brand);text-underline-offset:3px}
 header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:10px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);flex-shrink:0}
-.brand svg{width:34px;height:34px}
-.brand b{font-weight:800;font-size:18px;line-height:1.1;display:block}
+.brand img{width:42px;height:42px;border-radius:11px;object-fit:cover;box-shadow:0 0 0 1px var(--line)}
+.brand b{font-weight:800;font-size:18px;line-height:1.1;display:block;color:var(--brand)}
 .brand small{display:block;font-size:12px;color:var(--muted);line-height:1.1}
 .search{flex:1;position:relative;min-width:0}
 .search input{width:100%;font:inherit;font-size:16px;padding:10px 40px 10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);outline:none}
@@ -44,9 +48,11 @@ header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--b
 .search svg{position:absolute;right:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none}
 
 /* hero */
-.hero{padding:28px 0 8px}
-.hero h1{font-size:clamp(26px,6vw,36px);line-height:1.2;margin:0 0 8px;font-weight:800;letter-spacing:-.01em}
-.hero p{margin:0;color:var(--muted);max-width:60ch}
+.hero{margin:24px 0 6px;padding:18px;display:flex;gap:18px;align-items:center;background:var(--surface);border-radius:22px;border:2px dotted color-mix(in srgb,var(--grape) 55%,transparent);box-shadow:var(--shadow)}
+.hero img{width:120px;height:120px;border-radius:16px;flex-shrink:0;object-fit:cover}
+.hero h1{font-size:clamp(23px,5.4vw,34px);line-height:1.2;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;color:var(--brand)}
+.hero p{margin:0;color:var(--muted);max-width:60ch;font-size:16px}
+.clock{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:14px;font-weight:500;color:var(--grape);background:var(--grape-soft);padding:4px 11px;border-radius:999px}
 
 /* now cards */
 .now{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:22px 0 6px}
@@ -55,12 +61,22 @@ header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--b
 .card .val{font-size:20px;font-weight:700;margin-top:2px;line-height:1.3}
 .card .sub{font-size:14px;color:var(--muted);margin-top:2px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block}
-.dot.on{background:#3e9b4f}
+.dot.on{background:var(--leaf);box-shadow:0 0 0 3px var(--leaf-soft)}
+.card{border-top:4px solid var(--grape)}
+.card:nth-child(2){border-top-color:var(--brand)}
+.card:nth-child(3){border-top-color:var(--leaf)}
+.openlist{list-style:none;margin:6px 0 0;padding:0}
+.openlist li{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:15px}
+.openlist li b{font-weight:700}
+.openlist li span.s{color:var(--muted);font-size:14px}
+.status{margin-inline-start:auto;font-size:13px;font-weight:500;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.status.open{background:var(--leaf-soft);color:var(--leaf)}
+summary .status+.chev{margin-inline-start:6px}
 
 /* tiles */
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:22px 0 8px}
 .tile{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500;font-size:15px;line-height:1.3;transition:transform .12s,border-color .12s}
-.tile:hover{border-color:var(--brand);transform:translateY(-1px)}
+.tile:hover{border-color:var(--grape);transform:translateY(-1px);box-shadow:var(--shadow)}
 .tile .ic{width:34px;height:34px;border-radius:10px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
 .tile .ic svg{width:19px;height:19px}
 
@@ -75,11 +91,12 @@ summary .chev{margin-inline-start:auto;width:22px;height:22px;color:var(--muted)
 details[open]>summary .chev{transform:rotate(180deg)}
 .body{padding:0 18px 18px}
 .body>p.lead{margin-top:0;font-size:17px}
-h3{font-size:17px;margin:22px 0 8px;font-weight:700;color:var(--brand)}
+h3{font-size:17px;margin:22px 0 8px;font-weight:700;color:var(--grape)}
 ul.rules{list-style:none;padding:0;margin:0}
 ul.rules li{position:relative;padding:9px 22px 9px 0;border-top:1px solid var(--line)}
 ul.rules li:first-child{border-top:0}
 ul.rules li::before{content:"";position:absolute;right:4px;top:19px;width:7px;height:7px;border-radius:50%;background:var(--grape)}
+ul.rules li:nth-child(3n+2)::before{background:var(--leaf)}
 ul.rules b{font-weight:700}
 ol.steps{padding-inline-start:22px;margin:0}
 ol.steps li{padding:4px 0}
@@ -118,6 +135,10 @@ footer p{margin:4px 0}
   body{font-size:16px}
   .brand small{display:none}
   .brand b{font-size:16px}
+  .hero{padding:14px;gap:12px;align-items:flex-start}
+  .hero img{width:76px;height:76px;border-radius:12px}
+  .hero p{font-size:15px}
+  summary .status{font-size:12px;padding:2px 8px}
   section.topic>details>summary{font-size:18px;padding:14px 14px}
   .body{padding:0 14px 16px}
   .tbl{font-size:14.5px}
@@ -155,7 +176,7 @@ footer p{margin:4px 0}
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#" aria-label="לראש העמוד">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#3f5d3a"/><circle cx="24" cy="36" r="7" fill="#c9a6d9"/><circle cx="36" cy="30" r="7" fill="#b38cc8"/><circle cx="32" cy="43" r="7" fill="#9e74b8"/><path d="M34 22c2-6 8-9 14-8-2 6-8 9-14 8z" fill="#a9c79a"/></svg>
+      <img src="logo.jpg" alt="" width="42" height="42">
       <span><b>שריגים</b><small>מדריך לתושבים</small></span>
     </a>
     <label class="search">
@@ -170,8 +191,12 @@ footer p{margin:4px 0}
 
   <div id="intro">
     <div class="hero">
+      <img src="logo.jpg" alt="שריגים, זה בטבע שלי" width="120" height="120">
+      <div>
       <h1>כל מה שצריך לדעת, במקום אחד</h1>
       <p>שכנות ושכנים יקרים, ריכזנו כאן את הנהלים וההנחיות שהוועד וועדותיו פרסמו לאורך הזמן, כדי שכל אחת ואחד יוכלו למצוא במהירות מה נהוג אצלנו, ושנשמור יחד על שריגים נקייה, בטוחה ונעימה.</p>
+      <div class="clock" id="clock" aria-live="polite"></div>
+      </div>
     </div>
 
     <div class="now" aria-label="מידע שימושי עכשיו">
@@ -186,9 +211,8 @@ footer p{margin:4px 0}
         <div class="sub">מוציאים לרחוב יום לפני · בחגים המועד עשוי להשתנות</div>
       </div>
       <div class="card">
-        <div class="lbl"><span class="dot" id="gymDot"></span> הג׳ימבורי</div>
-        <div class="val" id="gymNow">שעות פעילות</div>
-        <div class="sub" id="gymSub">פרטים בפרק הג׳ימבורי</div>
+        <div class="lbl">מה פתוח עכשיו</div>
+        <ul class="openlist" id="openList"><li><span class="s">לפי שעות הפעילות</span></li></ul>
       </div>
     </div>
 
@@ -259,6 +283,7 @@ function mdToHtml(src){
 }
 
 const ICONS = {waste:"i-leaf",buildings:"i-home",gym:"i-blocks",library:"i-book",public:"i-tree",safety:"i-shield",dogs:"i-dog",group:"i-chat",post:"i-mail",contacts:"i-phone"};
+const SNAME = {post:"חלוקת דואר",gym:"ג׳ימבורי"};
 const SHORT = {waste:"פסולת, גזם ומיחזור",public:"שטחים וגני משחקים",safety:"בטיחות וחירום",group:"קבוצת הקהילה",library:"ספרייה",gym:"ג׳ימבורי"};
 const DAYS = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
 const pad = n => String(n).padStart(2,"0");
@@ -368,7 +393,7 @@ function render({settings,sections}){
     tiles.appendChild(t);
   });
   if(settings["עודכן לאחרונה"]) document.getElementById("updated").textContent=settings["עודכן לאחרונה"];
-  nextPickups(settings); gymStatus(sections.find(s=>s.id==="gym"));
+  nextPickups(settings); buildSchedules(sections); tick(); setInterval(()=>{ tick(); nextPickups(settings); },30000);
   wireUp();
   if(location.hash){ const t=document.querySelector(location.hash); if(t) setTimeout(()=>t.scrollIntoView(),50); }
 }
@@ -387,36 +412,68 @@ function nextPickups(settings){
   document.getElementById("nextBulky").textContent=fmt(b);
 }
 
-function gymStatus(sec){
-  if(!sec) return;
-  const slots=[];
-  sec.body.split("\n").filter(l=>/^\|/.test(l) && /\d{1,2}:\d{2}/.test(l)).forEach(l=>{
-    const cells=l.split("|").map(c=>c.trim()).filter(Boolean);
-    const days=(cells[1]||"").split(/[,،]\s*/).map(d=>DAYS.indexOf(d.trim())).filter(d=>d>=0);
-    const hm=(cells[2]||"").match(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/); if(!hm) return;
-    const ex=(cells[2]||"").match(/ב(\S+?) מפנים ב-(\d{1,2}:\d{2})/);
-    days.forEach(d=>{
-      let close=toMin(hm[2]);
-      if(ex && DAYS[d]===ex[1]) close=toMin(ex[2]);
-      slots.push([d,toMin(hm[1]),close]);
-    });
+/* ===== שעות פעילות: כל טבלה עם עמודות "ימים" ו"שעות" ===== */
+function dayList(txt){
+  txt=txt.replace(/^ב?ימי?\s+/,"");
+  const r=txt.match(/(ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת)\s*(?:–|-|עד)\s*(ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת)/);
+  if(r){ const out=[]; let d=DAYS.indexOf(r[1]); const e=DAYS.indexOf(r[2]); for(let k=0;k<7;k++){ out.push(d); if(d===e) break; d=(d+1)%7; } return out; }
+  return txt.split(/[,،]\s*|\s+ו(?=ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת)/).map(x=>DAYS.indexOf(x.trim().replace(/^ו/,""))).filter(x=>x>=0);
+}
+function scheduleOf(sec){
+  const lines=sec.body.split("\n").filter(l=>/^\s*\|/.test(l));
+  const slots=[]; let iDays=-1, iHours=-1;
+  lines.forEach(l=>{
+    const cells=l.trim().replace(/^\||\|$/g,"").split("|").map(c=>c.trim());
+    if(/^[\s:|-]+$/.test(l.replace(/\|/g,""))) return;
+    const hd=cells.findIndex(c=>c==="ימים"), hh=cells.findIndex(c=>c==="שעות");
+    if(hd>=0 && hh>=0){ iDays=hd; iHours=hh; return; }
+    if(iDays<0) return;
+    const days=dayList(cells[iDays]||""), hcell=cells[iHours]||"";
+    const ranges=[...hcell.matchAll(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/g)];
+    const ex=hcell.match(/ב(ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת)\s+(?:מפנים ב-?|עד\s*)(\d{1,2}:\d{2})/);
+    days.forEach(d=>ranges.forEach(m=>{
+      let close=toMin(m[2]); if(ex && DAYS[d]===ex[1]) close=toMin(ex[2]);
+      slots.push([d,toMin(m[1]),close]);
+    }));
   });
-  if(!slots.length) return;
-  const now=israelNow(), day=now.getDay(), mins=now.getHours()*60+now.getMinutes();
-  const val=document.getElementById("gymNow"), sub=document.getElementById("gymSub"), dot=document.getElementById("gymDot");
+  return slots;
+}
+function statusOf(slots,now){
+  const day=now.getDay(), mins=now.getHours()*60+now.getMinutes();
   const open=slots.find(s=>s[0]===day && mins>=s[1] && mins<s[2]);
-  if(open){
-    dot.classList.add("on");
-    val.textContent=`בשעות הפעילות עד ${tmin(open[2])}`;
-    sub.textContent = day>=5 ? "בסוף השבוע: כשאין אירוע אחר במקום" : "הקוד לתיבת המפתח מתקבל בפרטי";
-    return;
-  }
-  val.textContent="מחוץ לשעות הפעילות";
+  if(open) return {open:true, text:`פתוח עכשיו · עד ${tmin(open[2])}`, short:`עד ${tmin(open[2])}`, day};
   for(let i=0;i<8;i++){
     const dd=(day+i)%7;
     const c=slots.filter(s=>s[0]===dd && (i>0 || s[1]>mins)).sort((a,b)=>a[1]-b[1])[0];
-    if(c){ const when=i===0?"היום":i===1?"מחר":`ביום ${DAYS[dd]}`; sub.textContent=`נפתח ${when} ב-${tmin(c[1])}`; break; }
+    if(c){ const when=i===0?"היום":i===1?"מחר":`ביום ${DAYS[dd]}`; return {open:false, text:`סגור · נפתח ${when} ב-${tmin(c[1])}`, short:`נפתח ${when} ב-${tmin(c[1])}`}; }
   }
+  return {open:false,text:"סגור",short:""};
+}
+let SCHEDULES=[];
+function buildSchedules(sections){
+  SCHEDULES=sections.map(s=>({id:s.id,name:SNAME[s.id]||SHORT[s.id]||s.title,slots:scheduleOf(s),caveat:/רק כשאין אירוע/.test(s.body)})).filter(x=>x.slots.length);
+}
+function tick(){
+  const now=israelNow();
+  const c=document.getElementById("clock");
+  if(c) c.textContent=`🕒 ${fmt(now)} · ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const list=document.getElementById("openList"); if(list) list.innerHTML="";
+  SCHEDULES.forEach(x=>{
+    const st=statusOf(x.slots,now);
+    let txt=st.text; if(st.open && x.caveat && (st.day===5||st.day===6)) txt+=" (כשאין אירוע)";
+    const sum=document.querySelector(`#${x.id} summary`);
+    if(sum){
+      let b=sum.querySelector(".status"); if(!b){ b=document.createElement("span"); b.className="status"; sum.insertBefore(b,sum.querySelector(".chev")); }
+      b.textContent=st.open?"פתוח עכשיו":"סגור"; b.classList.toggle("open",st.open); b.title=txt;
+    }
+    if(list){
+      const li=document.createElement("li");
+      li.innerHTML=`<span class="dot${st.open?" on":""}"></span><a href="#${x.id}"><b></b></a><span class="s"></span>`;
+      li.querySelector("b").textContent=x.name; li.querySelector(".s").textContent=(st.open?"פתוח · ":"")+st.short+(st.open&&x.caveat&&(st.day===5||st.day===6)?" (כשאין אירוע)":"");
+      list.appendChild(li);
+    }
+  });
+  if(list && !SCHEDULES.length) list.innerHTML='<li><span class="s">אין כרגע פעילויות עם שעות קבועות</span></li>';
 }
 
 /* ===== חיפוש וניווט ===== */
