@@ -549,7 +549,9 @@ function dateForDay(now,dd){ const x=dayOnly(now); x.setDate(x.getDate()+((dd-x.
 function resolveSlots(slots,date){ // ממיר משבצות דינמיות (צאת שבת / עונה) לשעות אמיתיות לתאריך נתון
   return slots.map(s=>{
     if(s[3]==="tzeit"){ const t=tzeitMin(date.getFullYear(),date.getMonth(),date.getDate()); return [s[0],t+s[1],s[2]]; }
-    if(s[3]==="season"){ const c=isSummer(date)?s[4]:s[5]; return c==null?[s[0],-1,-1,"until",null]:[s[0],-1,-1,"until",c]; }
+    if(s[3]==="season"){ const r=isSummer(date)?s[4]:s[5];
+      if(!r) return [s[0],-1,-1];
+      return r[0]!=null ? [s[0],r[0],r[1]] : [s[0],-1,-1,"until",r[1]]; }
     return s;
   });
 }
@@ -577,11 +579,13 @@ function scheduleOf(sec){
       const plus=/שעה אחרי/.test(hcell)?60:/חצי שעה אחרי/.test(hcell)?30:0;
       days.forEach(d=>slots.push([d,plus,toMin(close[close.length-1].replace(/עד\s*/,"")),"tzeit"])); return;
     }
-    if(!ranges.length){
-      const su=hcell.match(/בקיץ[^,]*?עד\s*(\d{1,2}:\d{2})/), wi=hcell.match(/בחורף[^,]*?עד\s*(\d{1,2}:\d{2})/);
-      if(su||wi){ days.forEach(d=>slots.push([d,-1,-1,"season",su?toMin(su[1]):null,wi?toMin(wi[1]):null])); return; }
-      days.forEach(d=>slots.push([d,-1,-1])); return;
+    if(/בקיץ|בחורף/.test(hcell)){
+      const part=w=>{ const seg=(hcell.match(new RegExp(w+"[^,]*"))||[""])[0];
+        const r=seg.match(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/); if(r) return [toMin(r[1]),toMin(r[2])];
+        const u=seg.match(/עד\s*(\d{1,2}:\d{2})/); return u?[null,toMin(u[1])]:null; };
+      days.forEach(d=>slots.push([d,-1,-1,"season",part("בקיץ"),part("בחורף")])); return;
     }
+    if(!ranges.length){ days.forEach(d=>slots.push([d,-1,-1])); return; }
     days.forEach(d=>ranges.forEach(m=>{
       let close=toMin(m[2]); if(ex && DAYS[d]===ex[1]) close=toMin(ex[2]);
       slots.push([d,toMin(m[1]),close]);
