@@ -530,6 +530,30 @@ function nextPickups(settings){
 }
 
 /* ===== שעות פעילות: כל טבלה עם עמודות "ימים" ו"שעות" ===== */
+/* צאת השבת לשריגים: השמש 8.5° מתחת לאופק (כמו לוחות השנה המקובלים), ושעון קיץ/חורף לפי ישראל */
+function ilOffsetMin(date){
+  try{ const t=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Jerusalem",timeZoneName:"shortOffset"}).formatToParts(date).find(p=>p.type==="timeZoneName").value; const m=t.match(/GMT([+-]\d+)/); return m?(+m[1])*60:120; }catch(e){ return 120; }
+}
+function isSummer(date){ return ilOffsetMin(date)>=180; }
+function tzeitMin(y,m,d){ // דקות מחצות, שעון ישראל
+  const lat=31.676, lon=34.99, dep=8.5;
+  const n=Math.round((Date.UTC(y,m,d)-Date.UTC(y,0,0))/864e5);
+  const g=2*Math.PI/365*(n-1+(18-12)/24);
+  const eq=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g));
+  const decl=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g);
+  const la=lat*Math.PI/180, z=(90+dep)*Math.PI/180;
+  const ha=Math.acos(Math.cos(z)/(Math.cos(la)*Math.cos(decl))-Math.tan(la)*Math.tan(decl))*180/Math.PI;
+  return Math.round(720-4*lon-eq+4*ha+ilOffsetMin(new Date(Date.UTC(y,m,d,12))));
+}
+function dateForDay(now,dd){ const x=dayOnly(now); x.setDate(x.getDate()+((dd-x.getDay()+7)%7)); return x; }
+function resolveSlots(slots,date){ // ממיר משבצות דינמיות (צאת שבת / עונה) לשעות אמיתיות לתאריך נתון
+  return slots.map(s=>{
+    if(s[3]==="tzeit"){ const t=tzeitMin(date.getFullYear(),date.getMonth(),date.getDate()); return [s[0],t+s[1],s[2]]; }
+    if(s[3]==="season"){ const c=isSummer(date)?s[4]:s[5]; return c==null?[s[0],-1,-1,"until",null]:[s[0],-1,-1,"until",c]; }
+    return s;
+  });
+}
+
 function dayList(txt){
   txt=txt.replace(/^ב?ימי?\s+/,"").replace(/מוצאי\s+שבת|מוצ["״']ש/g,"שבת");
   const r=txt.match(/(ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת)\s*(?:–|-|עד)\s*(ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת)/);
@@ -548,7 +572,16 @@ function scheduleOf(sec){
     const days=dayList(cells[iDays]||""), hcell=cells[iHours]||"";
     const ranges=[...hcell.matchAll(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/g)];
     const ex=hcell.match(/ב(ראשון|שני|שלישי|רביעי|חמישי|שישי|שבת)\s+(?:מפנים ב-?|עד\s*)(\d{1,2}:\d{2})/);
-    if(!ranges.length){ days.forEach(d=>slots.push([d,-1,-1])); return; }
+    const close=hcell.match(/עד\s*(\d{1,2}:\d{2})/g)||[];
+    if(/צאת השבת/.test(hcell) && close.length){
+      const plus=/שעה אחרי/.test(hcell)?60:/חצי שעה אחרי/.test(hcell)?30:0;
+      days.forEach(d=>slots.push([d,plus,toMin(close[close.length-1].replace(/עד\s*/,"")),"tzeit"])); return;
+    }
+    if(!ranges.length){
+      const su=hcell.match(/בקיץ[^,]*?עד\s*(\d{1,2}:\d{2})/), wi=hcell.match(/בחורף[^,]*?עד\s*(\d{1,2}:\d{2})/);
+      if(su||wi){ days.forEach(d=>slots.push([d,-1,-1,"season",su?toMin(su[1]):null,wi?toMin(wi[1]):null])); return; }
+      days.forEach(d=>slots.push([d,-1,-1])); return;
+    }
     days.forEach(d=>ranges.forEach(m=>{
       let close=toMin(m[2]); if(ex && DAYS[d]===ex[1]) close=toMin(ex[2]);
       slots.push([d,toMin(m[1]),close]);
@@ -558,11 +591,18 @@ function scheduleOf(sec){
 }
 function statusOf(slots,now){
   const day=now.getDay(), mins=now.getHours()*60+now.getMinutes();
-  const special=new Set(slots.filter(s=>s[1]<0).map(s=>s[0]));
-  slots=slots.filter(s=>s[1]>=0);
+  const raw=slots;
+  const forDay=dd=>resolveSlots(raw.filter(s=>s[0]===dd),dateForDay(now,dd));
+  const todays=forDay(day);
+  const special=todays.find(s=>s[1]<0);
+  slots=[]; for(let k=0;k<7;k++) forDay(k).filter(s=>s[1]>=0).forEach(s=>slots.push(s));
   const open=slots.find(s=>s[0]===day && mins>=s[1] && mins<s[2]);
   if(open) return {open:true, text:`פתוח עכשיו · עד ${tmin(open[2])}`, short:`עד ${tmin(open[2])}`, day};
-  if(special.has(day)) return {open:false, special:true, text:"שעות מיוחדות היום · ראו בפרק", short:"שעות מיוחדות היום"};
+  if(special){
+    if(special[3]==="until" && special[4]!=null){
+      if(mins<special[4]) return {open:false, special:true, text:`היום פתוח עד ${tmin(special[4])}`, short:`היום עד ${tmin(special[4])}`};
+    } else return {open:false, special:true, text:"שעות מיוחדות היום · ראו בפרק", short:"שעות מיוחדות היום"};
+  }
   for(let i=0;i<8;i++){
     const dd=(day+i)%7;
     const c=slots.filter(s=>s[0]===dd && (i>0 || s[1]>mins)).sort((a,b)=>a[1]-b[1])[0];
@@ -585,7 +625,7 @@ function tick(){
     const sum=document.querySelector(`#${x.id} summary`);
     if(sum){
       let b=sum.querySelector(".status"); if(!b){ b=document.createElement("span"); b.className="status"; sum.insertBefore(b,sum.querySelector(".chev")); }
-      b.textContent=st.open?"פתוח עכשיו":st.special?"שעות מיוחדות":"סגור"; b.classList.toggle("open",st.open); b.title=txt;
+      b.textContent=st.open?"פתוח עכשיו":st.special?(st.short||"שעות מיוחדות"):"סגור"; b.classList.toggle("open",st.open); b.title=txt;
     }
     if(list){
       const li=document.createElement("li");
@@ -593,6 +633,18 @@ function tick(){
       li.querySelector("b").textContent=x.name; li.querySelector(".s").textContent=(st.open?"פתוח · ":"")+st.short+(st.open&&x.caveat&&(st.day===5||st.day===6)?" (כשאין אירוע)":"");
       list.appendChild(li);
     }
+  });
+  // הערת צאת שבת מתחת לטבלת שעות שיש בה "צאת השבת"
+  SCHEDULES.forEach(x=>{
+    const tz=x.slots.find(s=>s[3]==="tzeit"); if(!tz) return;
+    const sec=document.getElementById(x.id); if(!sec) return;
+    const sat=dateForDay(now,6);
+    if(now.getDay()===6 && now.getHours()*60+now.getMinutes()>=tz[2]) sat.setDate(sat.getDate()+7);
+    const t=tzeitMin(sat.getFullYear(),sat.getMonth(),sat.getDate());
+    let n=sec.querySelector(".tzeit-note");
+    if(!n){ n=document.createElement("div"); n.className="note tzeit-note"; const tb=sec.querySelector(".body table"); (tb||sec.querySelector(".body")).insertAdjacentElement(tb?"afterend":"afterbegin",n); }
+    const isToday=now.getDay()===6 && sat.getDate()===now.getDate();
+    n.innerHTML=`🌙 <b>${isToday?"הערב":"במוצאי השבת הקרובה ("+sat.getDate()+"."+(sat.getMonth()+1)+")"}:</b> צאת השבת בשריגים ב-${tmin(t)}, ולכן ${x.name} נפתח ב-${tmin(t+tz[1])} ועד ${tmin(tz[2])}.`;
   });
   if(list && !SCHEDULES.length) list.innerHTML='<li><span class="s">אין כרגע פעילויות עם שעות קבועות</span></li>';
 }
