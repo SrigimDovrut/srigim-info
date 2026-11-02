@@ -141,7 +141,7 @@ img.poster{display:block;width:100%;height:auto;border-radius:14px;border:1px so
 .btn.wa{background:#1f8a4c;color:#fff}
 @media (prefers-color-scheme: dark){ .btn.wa{background:#2a9d5a} }
 .btn svg{width:15px;height:15px}
-a.tel{white-space:nowrap;direction:ltr;unicode-bidi:isolate}
+.tel{white-space:nowrap;direction:ltr;unicode-bidi:isolate}
 
 /* search state */
 mark{background:#f3dd8a;color:#24302a;border-radius:3px;padding:0 1px}
@@ -376,7 +376,7 @@ function enhanceText(root){
       frag.appendChild(document.createTextNode(n.nodeValue.slice(last,off)));
       let el;
       if(m.includes("–")){ el=document.createElement("bdi"); el.dir="ltr"; el.textContent=m; }
-      else{ el=document.createElement("a"); el.className="tel"; el.href=telHref(m); el.textContent=m; }
+      else{ el=document.createElement("bdi"); el.dir="ltr"; el.className="tel"; el.textContent=m; }
       frag.appendChild(el); last=off+m.length;
     });
     frag.appendChild(document.createTextNode(n.nodeValue.slice(last)));
