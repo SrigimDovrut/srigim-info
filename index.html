@@ -193,8 +193,8 @@ footer p{margin:4px 0}
     <div class="hero">
       <img src="logo.jpg" alt="שריגים, זה בטבע שלי" width="120" height="120">
       <div>
-      <h1>כל מה שצריך לדעת, במקום אחד</h1>
-      <p>שכנות ושכנים יקרים, ריכזנו כאן את הנהלים וההנחיות שהוועד וועדותיו פרסמו לאורך הזמן, כדי שכל אחת ואחד יוכלו למצוא במהירות מה נהוג אצלנו, ושנשמור יחד על שריגים נקייה, בטוחה ונעימה.</p>
+      <h1 id="heroTitle">כל מה שצריך לדעת, במקום אחד</h1>
+      <p id="heroText">שכנות ושכנים יקרים, ריכזנו כאן את הנהלים וההנחיות שהוועד וועדותיו פרסמו לאורך הזמן, כדי שכל אחת ואחד יוכלו למצוא במהירות מה נהוג אצלנו, ושנשמור יחד על שריגים נקייה, בטוחה ונעימה.</p>
       <div class="clock" id="clock" aria-live="polite"></div>
       </div>
     </div>
@@ -393,6 +393,8 @@ function render({settings,sections}){
     tiles.appendChild(t);
   });
   if(settings["עודכן לאחרונה"]) document.getElementById("updated").textContent=settings["עודכן לאחרונה"];
+  if(settings["כותרת ראשית"]) document.getElementById("heroTitle").textContent=settings["כותרת ראשית"];
+  if(settings["פתיח"]) document.getElementById("heroText").textContent=settings["פתיח"];
   nextPickups(settings); buildSchedules(sections); tick(); setInterval(()=>{ tick(); nextPickups(settings); },30000);
   wireUp();
   if(location.hash){ const t=document.querySelector(location.hash); if(t) setTimeout(()=>t.scrollIntoView(),50); }
