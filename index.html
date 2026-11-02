@@ -239,7 +239,7 @@ footer p{margin:4px 0}
       <div class="card">
         <div class="lbl">פינוי פסולת גושית הבא</div>
         <div class="val" id="nextBulky">יום שני, אחת לשבועיים</div>
-        <div class="sub">מוציאים לרחוב יום לפני · בחגים המועד עשוי להשתנות</div>
+        <div class="sub" id="bulkySub">מוציאים לרחוב יום לפני בלבד</div>
       </div>
       <div class="card hidden" id="nextEventCard">
         <div class="lbl">האירוע הקרוב</div>
@@ -504,12 +504,15 @@ function nextPickups(settings){
   if(add===0 && now.getHours()>=12) add=7;
   g.setDate(g.getDate()+add);
   document.getElementById("nextGezem").textContent=fmt(g);
+  // גושית: רק תאריכים שהוזנו במפורש בקובץ התוכן, לפי לוח המועצה. בלי חישוב אוטומטי.
   const key=Object.keys(settings).find(k=>k.includes("גושית"));
-  const m=key && settings[key].match(/(\d{1,2})[./](\d{1,2})[./](\d{4})/);
-  if(!m) return;
-  let b=new Date(+m[3],+m[2]-1,+m[1]);
-  while(b<today || (b.getTime()===today.getTime() && now.getHours()>=12)) b.setDate(b.getDate()+14);
-  document.getElementById("nextBulky").textContent=fmt(b);
+  const dates=[...((key&&settings[key])||"").matchAll(/(\d{1,2})[./](\d{1,2})[./](\d{4})/g)]
+    .map(m=>new Date(+m[3],+m[2]-1,+m[1]))
+    .filter(d=>d>today || (d.getTime()===today.getTime() && now.getHours()<12))
+    .sort((a,b)=>a-b);
+  const el=document.getElementById("nextBulky"), sub=document.getElementById("bulkySub");
+  if(dates.length){ el.textContent=fmt(dates[0]); sub.textContent="מוציאים לרחוב יום לפני בלבד"; }
+  else { el.textContent="לפי לוח המועצה"; sub.innerHTML='המועד הבא טרם עודכן כאן · <a href="https://m-yehuda.org.il/925/" target="_blank" rel="noopener">ללוח באתר המועצה</a>'; }
 }
 
 /* ===== שעות פעילות: כל טבלה עם עמודות "ימים" ו"שעות" ===== */
