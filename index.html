@@ -78,10 +78,10 @@ summary .status+.chev{margin-inline-start:6px}
 
 /* tiles */
 .tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:22px 0 8px}
-.tile{display:flex;align-items:center;gap:9px;padding:8px 16px 8px 10px;border-radius:999px;white-space:nowrap;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500;font-size:15px;line-height:1.3;transition:transform .12s,border-color .12s}
-.tile:hover{border-color:var(--grape);transform:translateY(-1px);box-shadow:var(--shadow)}
-.tile .ic{width:32px;height:32px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
-.tile .ic svg{width:19px;height:19px}
+.tile{width:calc((100% - 60px) / 7);min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;padding:14px 8px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500;font-size:14.5px;line-height:1.25;text-align:center;transition:transform .12s,border-color .12s,box-shadow .12s}
+.tile:hover{border-color:var(--grape);transform:translateY(-2px);box-shadow:var(--shadow)}
+.tile .ic{width:42px;height:42px;border-radius:13px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
+.tile .ic svg{width:21px;height:21px}
 
 /* sections */
 main{padding-bottom:40px}
@@ -168,10 +168,11 @@ footer p{margin:4px 0}
   .card .sub{font-size:13px}
   #nextEventCard{grid-column:1/-1}
   .openlist{flex-direction:column;gap:2px}
-  .tiles{gap:8px}
-  .tile{font-size:14px;padding:6px 12px 6px 8px}
-  .tile .ic{width:28px;height:28px}
-  .tile .ic svg{width:16px;height:16px}
+  .tiles{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x proximity;gap:8px;margin:18px -16px 6px;padding:2px 16px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tiles::-webkit-scrollbar{display:none}
+  .tile{width:88px;flex:0 0 auto;scroll-snap-align:start;padding:11px 6px 9px;font-size:13px;gap:6px}
+  .tile .ic{width:36px;height:36px;border-radius:11px}
+  .tile .ic svg{width:18px;height:18px}
   section.topic>details>summary{font-size:18px;padding:14px 14px}
   .body{padding:0 14px 16px}
   .tbl{font-size:14.5px}
@@ -327,7 +328,7 @@ function mdToHtml(src){
 
 const ICONS = {clubs:"i-star",market:"i-cart",events:"i-cal",waste:"i-leaf",buildings:"i-home",gym:"i-blocks",library:"i-book",public:"i-tree",safety:"i-shield",dogs:"i-dog",group:"i-chat",post:"i-mail",contacts:"i-phone"};
 const SNAME = {market:"הסופר",post:"חלוקת דואר",gym:"ג׳ימבורי"};
-const SHORT = {market:"הסופר",events:"לוח אירועים",waste:"פסולת, גזם ומיחזור",public:"שטחים וגני משחקים",safety:"בטיחות וחירום",group:"קבוצת הקהילה",library:"ספרייה",gym:"ג׳ימבורי"};
+const SHORT = {market:"הסופר",events:"אירועים",waste:"פסולת וגזם",public:"גני משחקים",safety:"בטיחות וחירום",group:"קבוצת הקהילה",library:"ספרייה",gym:"ג׳ימבורי",post:"דואר",buildings:"מבני ציבור",contacts:"אנשי קשר",clubs:"חוגים",dogs:"כלבים"};
 const DAYS = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
 const pad = n => String(n).padStart(2,"0");
 const fmt = d => `יום ${DAYS[d.getDay()]}, ${d.getDate()}.${d.getMonth()+1}`;
