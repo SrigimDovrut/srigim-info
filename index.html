@@ -445,7 +445,7 @@ function statusOf(slots,now){
   for(let i=0;i<8;i++){
     const dd=(day+i)%7;
     const c=slots.filter(s=>s[0]===dd && (i>0 || s[1]>mins)).sort((a,b)=>a[1]-b[1])[0];
-    if(c){ const when=i===0?"היום":i===1?"מחר":`ביום ${DAYS[dd]}`; return {open:false, text:`סגור · נפתח ${when} ב-${tmin(c[1])}`, short:`נפתח ${when} ב-${tmin(c[1])}`}; }
+    if(c){ const when=i===0?"היום":i===1?"מחר":`ביום ${DAYS[dd]}`; return {open:false, text:`סגור · פתיחה ${when} ב-${tmin(c[1])}`, short:`פתיחה ${when} ב-${tmin(c[1])}`}; }
   }
   return {open:false,text:"סגור",short:""};
 }
