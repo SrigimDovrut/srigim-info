@@ -33,7 +33,7 @@
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{margin:0;background:var(--bg) radial-gradient(1200px 420px at 50% -120px, var(--brand-soft), transparent 70%) no-repeat;color:var(--ink);font-family:"Heebo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
 a{color:var(--brand);text-underline-offset:3px}
-.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
 
 /* header */
 header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -55,7 +55,9 @@ header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--b
 .clock{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:14px;font-weight:500;color:var(--grape);background:var(--grape-soft);padding:4px 11px;border-radius:999px}
 
 /* now cards */
-.now{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:22px 0 6px}
+.now{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 6px}
+.now .card.openc{grid-column:1/-1}
+.now:has(#nextEventCard.hidden){grid-template-columns:repeat(2,1fr)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
 .card .lbl{font-size:13px;color:var(--muted);font-weight:500;display:flex;align-items:center;gap:6px}
 .card .val{font-size:20px;font-weight:700;margin-top:2px;line-height:1.3}
@@ -65,7 +67,7 @@ header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--b
 .card{border-top:4px solid var(--grape)}
 .card:nth-child(2){border-top-color:var(--brand)}
 .card:nth-child(3){border-top-color:var(--leaf)}
-.openlist{list-style:none;margin:6px 0 0;padding:0}
+.openlist{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 26px}
 .openlist li{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:15px}
 .openlist li b{font-weight:700}
 .openlist li span.s{color:var(--muted);font-size:14px}
@@ -74,10 +76,10 @@ header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--b
 summary .status+.chev{margin-inline-start:6px}
 
 /* tiles */
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:22px 0 8px}
-.tile{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500;font-size:15px;line-height:1.3;transition:transform .12s,border-color .12s}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:22px 0 8px}
+.tile{display:flex;align-items:center;gap:9px;padding:8px 16px 8px 10px;border-radius:999px;white-space:nowrap;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500;font-size:15px;line-height:1.3;transition:transform .12s,border-color .12s}
 .tile:hover{border-color:var(--grape);transform:translateY(-1px);box-shadow:var(--shadow)}
-.tile .ic{width:34px;height:34px;border-radius:10px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
+.tile .ic{width:32px;height:32px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
 .tile .ic svg{width:19px;height:19px}
 
 /* sections */
@@ -161,7 +163,12 @@ footer p{margin:4px 0}
   .card{padding:12px 12px}
   .card .val{font-size:16.5px}
   .card .sub{font-size:13px}
-  .card:last-child,#nextEventCard{grid-column:1/-1}
+  #nextEventCard{grid-column:1/-1}
+  .openlist{flex-direction:column;gap:2px}
+  .tiles{gap:8px}
+  .tile{font-size:14px;padding:6px 12px 6px 8px}
+  .tile .ic{width:28px;height:28px}
+  .tile .ic svg{width:16px;height:16px}
   section.topic>details>summary{font-size:18px;padding:14px 14px}
   .body{padding:0 14px 16px}
   .tbl{font-size:14.5px}
@@ -239,7 +246,7 @@ footer p{margin:4px 0}
         <div class="val"><a href="#events" id="nextEvent" style="color:inherit;text-decoration:none"></a></div>
         <div class="sub" id="nextEventSub"></div>
       </div>
-      <div class="card">
+      <div class="card openc">
         <div class="lbl">מה פתוח עכשיו</div>
         <ul class="openlist" id="openList"><li><span class="s">לפי שעות הפעילות</span></li></ul>
       </div>
