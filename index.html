@@ -271,6 +271,7 @@ footer p{margin:4px 0}
 <button class="totop" id="totop" aria-label="לראש העמוד"><svg><use href="#i-up"/></svg></button>
 
 <script>
+if("scrollRestoration" in history) history.scrollRestoration="manual";
 /* התוכן נטען מהקובץ content.md. את הטקסטים עורכים שם, לא כאן. */
 /* קישור לעריכת התוכן ב-GitHub. יתמלא אחרי ההעלאה. */
 const EDIT_URL = "https://github.com/SrigimDovrut/srigim-info/edit/main/content.md";
@@ -495,7 +496,9 @@ function render({settings,sections}){
   if(settings["פתיח"]) document.getElementById("heroText").textContent=settings["פתיח"];
   showNextEvent(); nextPickups(settings); buildSchedules(sections); tick(); setInterval(()=>{ tick(); nextPickups(settings); },30000);
   wireUp();
-  if(location.hash){ const t=document.querySelector(location.hash); if(t) setTimeout(()=>t.scrollIntoView(),50); }
+  // פתיחה תמיד מראש העמוד, אלא אם הקישור מכוון במפורש לפרק (#)
+  let t=null; try{ if(location.hash.length>1) t=document.getElementById(decodeURIComponent(location.hash.slice(1))); }catch(e){}
+  if(t) setTimeout(()=>t.scrollIntoView(),50); else window.scrollTo(0,0);
 }
 
 function nextPickups(settings){
@@ -614,7 +617,10 @@ function wireUp(){
   document.addEventListener("click",e=>{
     const a=e.target.closest('a[href^="#"]'); if(!a) return;
     const t=document.querySelector(a.getAttribute("href"));
-    if(t && t.querySelector("details")) t.querySelector("details").open=true;
+    if(!t) return;
+    e.preventDefault();
+    if(t.querySelector("details")) t.querySelector("details").open=true;
+    t.scrollIntoView({behavior:"smooth"});
   });
 }
 let timer;
