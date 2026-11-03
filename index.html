@@ -211,7 +211,9 @@ b,strong{font-weight:600}
 .card .val{font-weight:600}
 .tile{border:0;border-radius:26px;box-shadow:var(--shadow);font-weight:500}
 .tile .ic{border-radius:50%}
-section.topic{border:0;border-radius:30px}
+section.topic{border:0;border-radius:30px;margin:10px 0}
+section.topic>details[open]{padding-bottom:2px}
+section.topic>details>summary:hover .ic{background:var(--grape-soft);color:var(--grape)}
 section.topic>details>summary{font-weight:600;padding:18px 20px}
 summary .ic{border-radius:50%}
 h3{font-weight:600}
@@ -540,7 +542,7 @@ function render({settings,sections}){
   sections.forEach(s=>{
     const icon=ICONS[s.id]||"i-leaf";
     const sec=document.createElement("section"); sec.className="topic"; sec.id=s.id;
-    sec.innerHTML=`<details open><summary><span class="ic"><svg><use href="#${icon}"/></svg></span><span class="t"></span><svg class="chev"><use href="#i-chev"/></svg></summary><div class="body"></div></details>`;
+    sec.innerHTML=`<details><summary><span class="ic"><svg><use href="#${icon}"/></svg></span><span class="t"></span><svg class="chev"><use href="#i-chev"/></svg></summary><div class="body"></div></details>`;
     sec.querySelector(".t").textContent=s.title;
     const body=sec.querySelector(".body");
     body.innerHTML=mdToHtml(s.body);
@@ -569,7 +571,7 @@ function render({settings,sections}){
   wireUp();
   // פתיחה תמיד מראש העמוד, אלא אם הקישור מכוון במפורש לפרק (#)
   let t=null; try{ if(location.hash.length>1) t=document.getElementById(decodeURIComponent(location.hash.slice(1))); }catch(e){}
-  if(t){ setTimeout(()=>t.scrollIntoView(),50); }
+  if(t){ const d=t.querySelector("details"); if(d) d.open=true; setTimeout(()=>t.scrollIntoView(),50); }
   else {
     if(location.hash) history.replaceState(null,"",location.pathname+location.search);
     window.scrollTo(0,0);
@@ -741,7 +743,7 @@ function runSearch(){
   const raw=document.getElementById("q").value.trim();
   const intro=document.getElementById("intro"), empty=document.getElementById("empty");
   sectionsEl.forEach(s=>{ s.querySelector(".body").innerHTML=originals.get(s); });
-  if(!raw){ intro.classList.remove("hidden"); empty.classList.add("hidden"); sectionsEl.forEach(s=>s.classList.remove("hidden")); return; }
+  if(!raw){ intro.classList.remove("hidden"); empty.classList.add("hidden"); sectionsEl.forEach(s=>{ s.classList.remove("hidden"); s.querySelector("details").open=false; }); return; }
   intro.classList.add("hidden");
   const re=new RegExp(raw.split(/\s+/).map(w=>esc(w).replace(/[׳']/g,"[׳']?")).join("|"),"gi");
   let any=false;
