@@ -535,7 +535,7 @@ function buildEvents(body, settings){
   // יומן גוגל
   const id=(settings["מזהה יומן גוגל"]||"").trim();
   [...body.querySelectorAll("p")].filter(p=>p.textContent.trim()==="[[יומן]]").forEach(p=>{
-    const box=document.createElement("div");
+    const box=document.createElement("div"); box.id="calendar";
     if(id){
       const src="https://calendar.google.com/calendar/embed?src="+encodeURIComponent(id)+"&ctz=Asia%2FJerusalem&hl=iw&mode=MONTH&showPrint=0&showTitle=0";
       box.innerHTML=`<a class="btn btn-cal" target="_blank" rel="noopener"><svg><use href="#i-cal"/></svg>הוספה ליומן שלי</a><div class="calbox"><iframe loading="lazy" title="יומן הישוב"></iframe></div>`;
@@ -608,7 +608,7 @@ function render({settings,sections}){
   if(LAST_MOD){ const d=new Date(LAST_MOD.toLocaleString("en-US",{timeZone:"Asia/Jerusalem"})); document.getElementById("updated").textContent=`${d.getDate()} ב${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
   else if(settings["עודכן לאחרונה"]) document.getElementById("updated").textContent=settings["עודכן לאחרונה"];
   if(settings["כותרת ראשית"]) document.getElementById("heroTitle").textContent=settings["כותרת ראשית"];
-  if(settings["פתיח"]) document.getElementById("heroText").textContent=settings["פתיח"];
+  if(settings["פתיח"]) document.getElementById("heroText").innerHTML=inline(settings["פתיח"]);
   showNextEvent(); nextPickups(settings); buildSchedules(sections); tick(); setInterval(()=>{ tick(); nextPickups(settings); },30000);
   wireUp();
   // פתיחה תמיד מראש העמוד, אלא אם הקישור מכוון במפורש לפרק (#)
@@ -804,8 +804,8 @@ function wireUp(){
     const t=document.querySelector(a.getAttribute("href"));
     if(!t) return;
     e.preventDefault();
-    if(t.querySelector("details")) t.querySelector("details").open=true;
-    t.scrollIntoView({behavior:"smooth"});
+    const d=t.querySelector("details")||t.closest("details"); if(d) d.open=true;
+    t.scrollIntoView({behavior:t.closest("details")?"auto":"smooth",block:t.closest("details")?"center":"start"});
   });
 }
 (function(){
