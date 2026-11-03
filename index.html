@@ -53,7 +53,9 @@ header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--b
 .hero h1{font-size:clamp(23px,5.4vw,34px);line-height:1.2;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;color:var(--brand)}
 .hero>div{flex:1;min-width:0}
 .hero p{margin:0;color:var(--muted);font-size:16.5px;line-height:1.7;text-wrap:pretty}
-.clock{display:inline-flex;align-items:center;gap:5px;margin:0 0 6px;font-size:12.5px;padding:2px 9px !important;font-weight:500;color:var(--grape);background:var(--grape-soft);padding:4px 11px;border-radius:999px}
+.clockrow{margin:16px 4px 8px}
+.clockrow+.hero{margin-top:0}
+.clock{display:inline-flex;align-items:center;gap:5px;margin:0;font-size:12.5px;padding:2px 9px !important;font-weight:500;color:var(--grape);background:var(--grape-soft);padding:4px 11px;border-radius:999px}
 
 /* now cards */
 .now{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 6px}
@@ -296,10 +298,10 @@ img.poster,.calbox{border-radius:22px}
   </div>
 
   <div id="intro">
+    <div class="clockrow"><div class="clock" id="clock" aria-live="polite"></div></div>
     <div class="hero">
       <img src="logo.jpg" alt="שריגים, זה בטבע שלי" width="120" height="120">
       <div>
-      <div class="clock" id="clock" aria-live="polite"></div>
       <h1 id="heroTitle">כל מה שצריך לדעת, במקום אחד</h1>
       <p id="heroText">שכנות ושכנים יקרים, ריכזנו כאן את הנהלים וההנחיות שהוועד וועדותיו פרסמו לאורך הזמן, כדי שכל אחת ואחד יוכלו למצוא במהירות מה נהוג אצלנו, ושנשמור יחד על שריגים נקייה, בטוחה ונעימה.</p>
       </div>
