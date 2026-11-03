@@ -114,6 +114,16 @@ ol.steps li{padding:4px 0}
 /* tiles strip hint (mobile) */
 .tiles-wrap{position:relative}
 .swipe-hint{display:none}
+/* urgent alert */
+.alert{display:flex;gap:12px;align-items:flex-start;margin:20px 0 0;padding:16px 18px;border-radius:24px;background:#fde8e6;color:#5c1712;border:2px solid #e2584a;box-shadow:0 6px 20px rgba(200,60,40,.18)}
+.alert-ic{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:#d83b2b;color:#fff;display:grid;place-items:center;font-weight:700;font-size:20px;animation:pulse 1.8s ease-in-out infinite}
+.alert-body{flex:1;min-width:0}
+.alert-title{font-weight:700;font-size:17px;color:#b42318;margin-bottom:2px}
+#alertText p{margin:4px 0}
+#alertText a{color:#9a1c10;font-weight:600}
+.alert-x{flex-shrink:0;background:transparent;border:0;color:#9a1c10;font-size:18px;cursor:pointer;padding:2px 4px;border-radius:50%}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(216,59,43,.45)}50%{box-shadow:0 0 0 8px rgba(216,59,43,0)}}
+@media (prefers-color-scheme: dark){ .alert{background:#3a1714;color:#ffd9d4;border-color:#e2584a} .alert-title{color:#ff8a7d} #alertText a,.alert-x{color:#ffb4a9} }
 /* events */
 .events{display:grid;gap:10px;margin:8px 0 6px}
 .ev{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
@@ -278,6 +288,12 @@ img.poster,.calbox{border-radius:22px}
 </header>
 
 <main class="wrap">
+
+  <div class="alert hidden" id="urgentBox" role="alert">
+    <div class="alert-ic" aria-hidden="true">!</div>
+    <div class="alert-body"><div class="alert-title">הודעה דחופה</div><div id="alertText"></div></div>
+    <button class="alert-x" id="alertX" aria-label="סגירת ההודעה">✕</button>
+  </div>
 
   <div id="intro">
     <div class="hero">
@@ -536,7 +552,28 @@ function showNextEvent(){
   document.getElementById("nextEventSub").textContent=[when,NEXT_EVENT.time,NEXT_EVENT.place].filter(Boolean).join(" · ");
 }
 
+function showAlert(sec){
+  const box=document.getElementById("urgentBox"); if(!box) return;
+  if(!sec){ box.classList.add("hidden"); return; }
+  let body=sec.body.replace(/<!--[\s\S]*?-->/g,"");
+  let until=null;
+  body=body.replace(/^\s*בתוקף עד:\s*(.+)$/m,(m,v)=>{
+    const d=v.match(/(\d{1,2})[./](\d{1,2})[./](\d{2,4})(?:\D+(\d{1,2}):(\d{2}))?/);
+    if(d){ const y=+d[3]<100?2000+ +d[3]:+d[3]; until=new Date(y,+d[2]-1,+d[1],d[4]?+d[4]:23,d[5]?+d[5]:59); }
+    return "";
+  }).trim();
+  if(!body || (until && israelNow()>until)){ box.classList.add("hidden"); return; }
+  document.getElementById("alertText").innerHTML=mdToHtml(body);
+  box.querySelectorAll("#alertText a[href^='http'],#alertText a[href$='.pdf']").forEach(a=>{a.target="_blank";a.rel="noopener";});
+  const key="alert-dismissed:"+body.length+":"+body.slice(0,40);
+  let dismissed=false; try{ dismissed=sessionStorage.getItem(key)==="1"; }catch(e){}
+  box.classList.toggle("hidden",dismissed);
+  document.getElementById("alertX").onclick=()=>{ box.classList.add("hidden"); try{ sessionStorage.setItem(key,"1"); }catch(e){} };
+}
+
 function render({settings,sections}){
+  showAlert(sections.find(s=>s.id==="alert"));
+  sections=sections.filter(s=>s.id!=="alert");
   const host=document.getElementById("content"); host.innerHTML="";
   const tiles=document.getElementById("tiles"); tiles.innerHTML="";
   sections.forEach(s=>{
