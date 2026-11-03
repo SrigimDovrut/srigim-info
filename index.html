@@ -142,6 +142,9 @@ ol.steps li{padding:4px 0}
 img.poster{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line);margin:12px 0 4px}
 .calbox{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
 .calbox iframe{display:block;width:100%;height:560px;border:0}
+.btn-cal{display:flex;justify-content:center;width:100%;max-width:420px;margin:6px auto 14px;padding:14px 20px;font-size:17px;font-weight:600;border-radius:999px;background:linear-gradient(135deg,var(--grape),var(--brand));color:#fff;box-shadow:0 8px 22px color-mix(in srgb,var(--grape) 35%,transparent);transition:transform .12s}
+.btn-cal:hover{transform:translateY(-1px)}
+.btn-cal svg{width:20px;height:20px}
 .calsoon{border:2px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted)}
 @media (max-width:520px){ .calbox iframe{height:460px} }
 /* contacts */
@@ -535,9 +538,9 @@ function buildEvents(body, settings){
     const box=document.createElement("div");
     if(id){
       const src="https://calendar.google.com/calendar/embed?src="+encodeURIComponent(id)+"&ctz=Asia%2FJerusalem&hl=iw&mode=MONTH&showPrint=0&showTitle=0";
-      box.innerHTML=`<div class="calbox"><iframe loading="lazy" title="יומן הישוב"></iframe></div><p><a class="btn ghost" target="_blank" rel="noopener"><svg><use href="#i-cal"/></svg>הוספה ליומן שלי</a></p>`;
+      box.innerHTML=`<a class="btn btn-cal" target="_blank" rel="noopener"><svg><use href="#i-cal"/></svg>הוספה ליומן שלי</a><div class="calbox"><iframe loading="lazy" title="יומן הישוב"></iframe></div>`;
       box.querySelector("iframe").src=src;
-      box.querySelector("a").href="https://calendar.google.com/calendar/r?cid="+encodeURIComponent(id);
+      box.querySelector("a.btn-cal").href="https://calendar.google.com/calendar/r?cid="+encodeURIComponent(id);
     } else {
       box.innerHTML='<div class="calsoon">📅 יומן האירועים של הישוב יופיע כאן בקרוב</div>';
     }
