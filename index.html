@@ -337,11 +337,13 @@ const tmin = v => `${Math.floor(v/60)}:${pad(v%60)}`;
 function israelNow(){ try{ return new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Jerusalem"})); }catch(e){ return new Date(); } }
 const dayOnly = d => new Date(d.getFullYear(),d.getMonth(),d.getDate());
 
+let LAST_MOD=null;
 async function loadMarkdown(){
   const inline = document.getElementById("inline-md");
   if(inline) return inline.textContent;
   const r = await fetch("content.md?v="+Date.now(), {cache:"no-store"});
   if(!r.ok) throw new Error("content.md");
+  const lm=r.headers.get("Last-Modified"); if(lm){ const d=new Date(lm); if(!isNaN(d)) LAST_MOD=d; }
   return await r.text();
 }
 
@@ -504,14 +506,26 @@ function render({settings,sections}){
     t.innerHTML=`<span class="ic"><svg><use href="#${icon}"/></svg></span>`; t.append(SHORT[s.id]||s.title);
     tiles.appendChild(t);
   });
-  if(settings["עודכן לאחרונה"]) document.getElementById("updated").textContent=settings["עודכן לאחרונה"];
+  // תאריך העדכון האחרון נלקח אוטומטית מזמן השמירה של קובץ התוכן
+  if(LAST_MOD){ const d=new Date(LAST_MOD.toLocaleString("en-US",{timeZone:"Asia/Jerusalem"})); document.getElementById("updated").textContent=`${d.getDate()} ב${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
+  else if(settings["עודכן לאחרונה"]) document.getElementById("updated").textContent=settings["עודכן לאחרונה"];
   if(settings["כותרת ראשית"]) document.getElementById("heroTitle").textContent=settings["כותרת ראשית"];
   if(settings["פתיח"]) document.getElementById("heroText").textContent=settings["פתיח"];
   showNextEvent(); nextPickups(settings); buildSchedules(sections); tick(); setInterval(()=>{ tick(); nextPickups(settings); },30000);
   wireUp();
   // פתיחה תמיד מראש העמוד, אלא אם הקישור מכוון במפורש לפרק (#)
   let t=null; try{ if(location.hash.length>1) t=document.getElementById(decodeURIComponent(location.hash.slice(1))); }catch(e){}
-  if(t) setTimeout(()=>t.scrollIntoView(),50); else window.scrollTo(0,0);
+  if(t){ setTimeout(()=>t.scrollIntoView(),50); }
+  else {
+    if(location.hash) history.replaceState(null,"",location.pathname+location.search);
+    window.scrollTo(0,0);
+    // שמירה על ראש העמוד בשניות הראשונות: אם משהו (שחזור גלילה, יומן מוטמע) מקפיץ את העמוד בלי שהמשתמש גלל, חוזרים למעלה
+    let touched=false; const mark=()=>{touched=true;};
+    ["wheel","touchstart","keydown","mousedown"].forEach(ev=>addEventListener(ev,mark,{once:true,passive:true}));
+    const guard=()=>{ if(!touched && scrollY>0) window.scrollTo(0,0); };
+    addEventListener("scroll",guard,{passive:true});
+    setTimeout(()=>removeEventListener("scroll",guard),5000);
+  }
 }
 
 function nextPickups(settings){
