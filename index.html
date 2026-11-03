@@ -111,6 +111,9 @@ ol.steps li{padding:4px 0}
 .note b{color:var(--warn)}
 .pill{display:inline-block;font-size:12.5px;font-weight:500;padding:2px 9px;border-radius:999px;background:var(--grape-soft);color:var(--grape);margin-inline-start:6px;vertical-align:2px}
 
+/* tiles strip hint (mobile) */
+.tiles-wrap{position:relative}
+.swipe-hint{display:none}
 /* events */
 .events{display:grid;gap:10px;margin:8px 0 6px}
 .ev{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
@@ -170,6 +173,12 @@ footer p{margin:4px 0}
   .openlist{flex-direction:column;gap:2px}
   .tiles{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x proximity;gap:8px;margin:18px -16px 6px;padding:2px 16px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .tiles::-webkit-scrollbar{display:none}
+  .tiles-wrap::after{content:"";position:absolute;top:18px;bottom:34px;left:-16px;width:56px;pointer-events:none;background:linear-gradient(to left,transparent,var(--bg));transition:opacity .3s}
+  .tiles-wrap.end::after{opacity:0}
+  .swipe-hint{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:500;color:var(--grape);margin:-2px 0 4px;transition:opacity .3s}
+  .swipe-hint span{display:inline-block;animation:nudge 1.4s ease-in-out infinite}
+  .tiles-wrap.used .swipe-hint{opacity:0;height:0;margin:0;overflow:hidden}
+  @keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
   .tile{width:88px;flex:0 0 auto;scroll-snap-align:start;padding:11px 6px 9px;font-size:13px;gap:6px}
   .tile .ic{width:36px;height:36px;border-radius:11px}
   .tile .ic svg{width:18px;height:18px}
@@ -300,7 +309,10 @@ img.poster,.calbox{border-radius:22px}
       </div>
     </div>
 
-    <nav class="tiles" id="tiles" aria-label="נושאים"></nav>
+    <div class="tiles-wrap" id="tilesWrap">
+      <nav class="tiles" id="tiles" aria-label="נושאים"></nav>
+      <div class="swipe-hint" id="swipeHint" aria-hidden="true">החליקו לעוד נושאים <span>←</span></div>
+    </div>
   </div>
 
   <p class="empty hidden" id="empty">לא מצאנו תוצאות. אפשר לנסות מילה אחרת, או לפנות למזכירות הישוב.</p>
@@ -752,6 +764,17 @@ function wireUp(){
     t.scrollIntoView({behavior:"smooth"});
   });
 }
+(function(){
+  const strip=document.getElementById("tiles"), wrap=document.getElementById("tilesWrap");
+  if(!strip||!wrap) return;
+  let nudging=false;
+  const upd=()=>{ const max=strip.scrollWidth-strip.clientWidth; const pos=Math.abs(strip.scrollLeft);
+    if(pos>40 && !nudging) wrap.classList.add("used"); wrap.classList.toggle("end", max<=0 || pos>=max-4); };
+  strip.addEventListener("scroll",upd,{passive:true}); addEventListener("resize",upd);
+  setTimeout(()=>{ upd(); if(strip.scrollWidth>strip.clientWidth && matchMedia("(max-width:520px)").matches && !wrap.classList.contains("used")){
+    nudging=true; strip.scrollBy({left:-70,behavior:"smooth"});
+    setTimeout(()=>{ strip.scrollTo({left:0,behavior:"smooth"}); setTimeout(()=>{ nudging=false; upd(); },700); },650); } },1200);
+})();
 let timer;
 document.getElementById("q").addEventListener("input",()=>{ clearTimeout(timer); timer=setTimeout(runSearch,120); });
 const tt=document.getElementById("totop");
