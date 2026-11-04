@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>שריגים · מדריך לתושבים</title>
 <meta name="description" content="נהלים, הנחיות ומידע שימושי לתושבות ולתושבי שריגים, במקום אחד.">
-<meta name="theme-color" content="#68367f">
+<meta name="theme-color" content="#7d1d24">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta property="og:image" content="logo.jpg">
+<meta property="og:image" content="mosaic.jpg">
 <style>
 :root{
   --bg:#f6f1e8; --surface:#fffdf9; --surface-2:#f4edf5; --ink:#2f2534; --muted:#6c6272;
@@ -261,6 +261,63 @@ img.poster,.calbox{border-radius:22px}
   .tile{border-radius:22px}
   section.topic{border-radius:26px}
 }
+
+/* ===== שפה עיצובית: שלט הפסיפס בכניסה לישוב ===== */
+:root{
+  --bg:#f5f1e9; --surface:#fffdf8; --surface-2:#eef3f1; --ink:#2b2a3c; --muted:#66636d;
+  --line:#e6dfd2; --brand:#7d1d24; --brand-ink:#ffffff; --brand-soft:#f6e5e2;
+  --grape:#b5381f; --grape-soft:#fbe9e2; --leaf:#5c6a2b; --leaf-soft:#eef0dc;
+  --navy:#2b2a4a; --sky:#cfe0e2; --frame:#a6a47a;
+  --shadow:0 2px 6px rgba(60,50,30,.05),0 10px 26px rgba(60,50,30,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1b1a20; --surface:#25242c; --surface-2:#2b3133; --ink:#f1eee8; --muted:#b5b0b8;
+    --line:#3a3840; --brand:#eaa096; --brand-ink:#2a1214; --brand-soft:#3a2628;
+    --grape:#f29a7e; --grape-soft:#3b2722; --leaf:#c2cd84; --leaf-soft:#2c3020;
+    --navy:#dfe3f5; --sky:#2c3a3d; --frame:#7d7c5c;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  }
+}
+body{background:var(--bg) radial-gradient(1200px 420px at 50% -120px, var(--sky), transparent 70%) no-repeat}
+.brandimg{width:auto !important;height:34px !important;border-radius:6px !important;box-shadow:0 0 0 3px var(--frame) !important}
+.brand small{font-weight:500}
+figure.sign{margin:0 0 14px;padding:9px;background:var(--frame);border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),0 10px 26px rgba(60,50,30,.16)}
+figure.sign img{display:block;width:100%;height:auto;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.hero{display:block;border:0;border-radius:18px;padding:20px 22px;background:var(--surface);border-top:5px solid var(--frame)}
+.hero h1{color:var(--navy);font-weight:800;letter-spacing:-.01em}
+.hero p{color:var(--muted)}
+.hero p a{color:var(--brand);font-weight:500}
+.clock{color:var(--navy);background:var(--sky)}
+.card{border-radius:18px;background:linear-gradient(180deg,var(--acc-soft,var(--sky)) 0%,var(--surface) 62%)}
+.card:nth-child(1){--acc-soft:var(--leaf-soft)}
+.card:nth-child(2){--acc-soft:var(--grape-soft)}
+.card .lbl{color:var(--grape)}
+.tile{border-radius:16px}
+.tile .ic{border-radius:10px;background:var(--sky);color:var(--navy)}
+section.topic{border-radius:18px}
+summary .ic{border-radius:10px;background:var(--sky);color:var(--navy)}
+section.topic>details>summary:hover .ic{background:var(--grape-soft);color:var(--grape)}
+section.topic>details>summary{color:var(--navy)}
+ul.rules li::before{border-radius:2px;transform:rotate(12deg);background:var(--grape)}
+.ev,.ct{border-radius:16px}
+.ev .date{border-radius:12px}
+.ev .date b{color:var(--brand)}
+.tbl,.note,img.poster,.calbox,.calsoon{border-radius:14px}
+.btn{border-radius:999px}
+.btn-cal{background:linear-gradient(135deg,var(--brand),var(--grape))}
+.clockrow+.leadrow .hero{margin-top:0}
+@media (min-width:800px){
+  .leadrow{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:stretch;margin-bottom:6px}
+  .leadrow figure.sign{margin:0;align-self:center}
+  .leadrow .hero{margin:0;display:flex;flex-direction:column;justify-content:center}
+}
+@media (max-width:520px){
+  figure.sign{padding:6px;border-radius:8px;margin-bottom:10px}
+  .hero{border-radius:16px;padding:16px}
+  .card,section.topic{border-radius:16px}
+  .tile{border-radius:14px}
+}
 </style>
 </head>
 <body>
@@ -290,8 +347,8 @@ img.poster,.calbox{border-radius:22px}
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#" aria-label="לראש העמוד">
-      <img src="logo.jpg" alt="" width="42" height="42">
-      <span><b>שריגים</b><small>מדריך לתושבים</small></span>
+      <img class="brandimg" src="brand.jpg" alt="שריגים" width="113" height="32">
+      <span><small>מדריך לתושבים</small></span>
     </a>
     <label class="search">
       <span class="hidden">חיפוש</span>
@@ -311,12 +368,14 @@ img.poster,.calbox{border-radius:22px}
 
   <div id="intro">
     <div class="clockrow"><div class="clock" id="clock" aria-live="polite"></div></div>
+    <div class="leadrow">
+    <figure class="sign"><img src="mosaic.jpg" alt="שלט הפסיפס בכניסה לשריגים: שריגים, זה בטבע שלי, ברוכים הבאים" width="1600" height="900"></figure>
     <div class="hero">
-      <img src="logo.jpg" alt="שריגים, זה בטבע שלי" width="120" height="120">
       <div>
       <h1 id="heroTitle">כל מה שצריך לדעת, במקום אחד</h1>
       <p id="heroText">שכנות ושכנים יקרים, ריכזנו כאן את הנהלים וההנחיות שהוועד וועדותיו פרסמו לאורך הזמן, כדי שכל אחת ואחד יוכלו למצוא במהירות מה נהוג אצלנו, ושנשמור יחד על שריגים נקייה, בטוחה ונעימה.</p>
       </div>
+    </div>
     </div>
 
     <div class="now" aria-label="מידע שימושי עכשיו">
