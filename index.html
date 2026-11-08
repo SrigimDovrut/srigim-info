@@ -950,5 +950,27 @@ loadMarkdown().then(md=>render(parse(md))).catch(()=>{
   document.getElementById("content").innerHTML='<p class="empty">לא הצלחנו לטעון את התוכן. נסו לרענן את הדף.</p>';
 });
 </script>
+<script>
+// מעקב לחיצות (GoatCounter, ללא עוגיות)
+document.addEventListener("click",e=>{
+  if(!window.goatcounter||!window.goatcounter.count) return;
+  const sm=e.target.closest("section.topic>details>summary");
+  if(sm&&!sm.parentElement.open){ const id=sm.closest("section").id; window.goatcounter.count({path:"open/"+id, title:"פתיחת נושא · "+id, event:true}); return; }
+  const a=e.target.closest("a,button"); if(!a) return;
+  const sec=(a.closest("section")||{}).id||"top";
+  const txt=(a.textContent||"").trim().replace(/\s+/g," ").slice(0,40);
+  let kind="";
+  if(a.classList.contains("btn-cal")) kind="יומן";
+  else if(a.classList.contains("waze")) kind="וויז";
+  else if(a.classList.contains("gmaps")) kind="גוגל-מפס";
+  else if(a.classList.contains("wa")) kind="וואטסאפ";
+  else if(/^tel:/.test(a.getAttribute("href")||"")) kind="חיוג";
+  else if(a.classList.contains("tile")) kind="אריח";
+  else if(a.tagName==="A"&&/^https?:/.test(a.getAttribute("href")||"")) kind="קישור";
+  if(!kind) return;
+  window.goatcounter.count({path:"click/"+kind+"/"+sec+"/"+txt, title:kind+" · "+txt, event:true});
+});
+</script>
+<script data-goatcounter="https://srigital.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
