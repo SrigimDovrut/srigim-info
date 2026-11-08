@@ -646,7 +646,7 @@ function buildMap(body){
     });
     table.remove();
   });
-  const box=document.createElement("div"); box.className="mapwrap"; box.id="map";
+  const box=document.createElement("div"); box.className="mapwrap"; if(!document.getElementById("map")) box.id="map";
   if(!places.length){ box.innerHTML='<div class="calsoon">📍 המפה תופיע כאן בקרוב</div>'; marker.replaceWith(box); return; }
   box.innerHTML='<div class="calbox mapbox"><iframe loading="lazy" title="מפת מבני הציבור"></iframe></div><div class="places"></div>';
   const frame=box.querySelector("iframe"), list=box.querySelector(".places");
