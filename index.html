@@ -332,6 +332,7 @@ ul.rules li::before{border-radius:2px;transform:rotate(12deg);background:var(--g
   .tile{border-radius:14px}
 }
 .ev img.poster{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:12px;margin:10px 0 0}
+.body h4{font-size:15.5px;margin:18px 0 6px;font-weight:700;color:var(--navy)}
 </style>
 </head>
 <body>
@@ -459,6 +460,7 @@ function mdToHtml(src){
     let l=lines[i];
     if(!l.trim()){ i++; continue; }
     let m;
+    if((m=l.match(/^####\s+(.*)/))){ out.push(`<h4>${inline(m[1])}</h4>`); i++; continue; }
     if((m=l.match(/^###\s+(.*)/))){ out.push(`<h3>${inline(m[1])}</h3>`); i++; continue; }
     if(isTable(l)){
       const rows=[]; while(i<lines.length && isTable(lines[i])){ rows.push(lines[i]); i++; }
