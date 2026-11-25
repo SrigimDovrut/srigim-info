@@ -853,6 +853,8 @@ function statusOf(slots,now){
   return {open:false,text:"סגור",short:""};
 }
 let SCHEDULES=[];
+// פרקים עם שעות שלא מוצגים בכרטיס "מה פעיל עכשיו / בקרוב" (רק בתג בכותרת הפרק)
+const HIDE_FROM_NOW=new Set(["fitness"]);
 function buildSchedules(sections){
   SCHEDULES=sections.map(s=>({id:s.id,name:SNAME[s.id]||SHORT[s.id]||s.title,slots:scheduleOf(s),caveat:/רק כשאין אירוע/.test(s.body)})).filter(x=>x.slots.length);
 }
@@ -869,7 +871,7 @@ function tick(){
       let b=sum.querySelector(".status"); if(!b){ b=document.createElement("span"); b.className="status"; sum.insertBefore(b,sum.querySelector(".chev")); }
       b.textContent=st.open?"פתוח עכשיו":st.special?(st.short||"שעות מיוחדות"):"סגור"; b.classList.toggle("open",st.open); b.title=txt;
     }
-    if(list){
+    if(list && !HIDE_FROM_NOW.has(x.id)){
       const li=document.createElement("li");
       li.innerHTML=`<span class="dot${st.open?" on":""}"></span><a href="#${x.id}"><b></b></a><span class="s"></span>`;
       li.querySelector("b").textContent=x.name; li.querySelector(".s").textContent=(st.open?"פתוח · ":"")+st.short+(st.open&&x.caveat&&(st.day===5||st.day===6)?" (כשאין אירוע)":"");
